@@ -5,13 +5,12 @@ let component = ReasonReact.statelessComponent("NowPlaying");
 let nowPlaying =
   style([
     backgroundColor(hex("fff")),
-    bottom(px(0)),
     display(grid),
-    left(px(0)),
+    height(px(300)),
     padding(px(20)),
-    position(fixed),
+    position(sticky),
     overflow(hidden),
-    right(px(0)),
+    top(px(0)),
     unsafe("gridTemplateColumns", "1fr 1140px 1fr"),
     zIndex(2),
   ]);
@@ -22,7 +21,7 @@ let background =
     backgroundSize(`cover),
     bottom(px(0)),
     left(px(0)),
-    transform(scale(1.0, 1.0)),
+    transform(scale(1.5, 1.5)),
     opacity(0.2),
     position(absolute),
     right(px(0)),

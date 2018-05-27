@@ -6,9 +6,8 @@ let component = ReasonReact.statelessComponent("TrackDuration");
 
 let trackDuration =
   style([
-    color(rgba(54, 61, 67, 0.6)),
+    color(rgba(54, 61, 67, 0.8)),
     fontSize(px(12)),
-    fontWeight(500),
     textAlign(`right),
   ]);
 

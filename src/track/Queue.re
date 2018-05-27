@@ -6,7 +6,7 @@ let gridRow =
   style([
     display(grid),
     /* Replace when this gets pushed to a new version https://github.com/SentiaAnalytics/bs-css/commit/2be0bfdaec448c7ce17a564cd5f7c4d269acf2c8 */
-    paddingBottom(px(120)),
+    paddingBottom(px(40)),
     paddingTop(px(40)),
     position(relative),
     unsafe("gridTemplateColumns", "1fr 1140px 1fr"),
@@ -35,7 +35,7 @@ let trackRow =
     display(grid),
     gridColumn(2, 2),
     gridColumnGap(px(20)),
-    fontSize(px(14)),
+    fontSize(px(12)),
     paddingBottom(px(15)),
     paddingTop(px(15)),
     /* Replace when this gets pushed to a new version https://github.com/SentiaAnalytics/bs-css/commit/2be0bfdaec448c7ce17a564cd5f7c4d269acf2c8 */
@@ -44,7 +44,12 @@ let trackRow =
 
 let durationColumn = style([textAlign(`right)]);
 
-let trackName = style([fontWeight(500)]);
+let trackName =
+  style([
+    color(hex("363d43")),
+    textDecoration(none),
+    selector(":hover", [textDecoration(underline)]),
+  ]);
 
 let emptyList =
   style([
@@ -88,9 +93,13 @@ let make = (~queue, _children) => {
               <div className=trackRow key=track##spotifyUri>
                 <div> (trackNumber(i + 1) |> Utils.ste) </div>
                 <Cover track />
-                <div className=trackName> (track##name |> Utils.ste) </div>
+                <a className=trackName href=track##spotifyUri>
+                  (track##name |> Utils.ste)
+                </a>
                 <Artists track />
-                <div> (track##album##name |> Utils.ste) </div>
+                <a className=trackName href=track##album##uri>
+                  (track##album##name |> Utils.ste)
+                </a>
                 <TrackDuration track />
                 <Gravatar track />
               </div>,

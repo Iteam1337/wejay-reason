@@ -7,50 +7,43 @@ module Room = [%graphql
         currentTrack {
           album {
             images {
-              height
               url
-              width
             }
             name
+            uri
           }
           artists {
             name
+            uri
           }
           duration
           name
           spotifyUri
-          started
           user {
             email
-            id
           }
         }
-        isPlaying
-        name
         users {
           email
-          id
           lastPlay
         }
         queue {
           album {
             images {
-              height
               url
-              width
             }
             name
+            uri
           }
           artists {
             name
+            uri
           }
           duration
           name
           spotifyUri
-          started
           user {
             email
-            id
           }
         }
       }

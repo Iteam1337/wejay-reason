@@ -39,7 +39,6 @@ let make = _children => {
       ...(
            ({result}) =>
              switch (result) {
-             | NoData => "No Data" |> Utils.ste
              | Loading => "Loading" |> Utils.ste
              | Error(error) =>
                Js.log(error);

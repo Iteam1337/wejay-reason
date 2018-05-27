@@ -43,7 +43,7 @@ let make = _children => {
     ),
   render: ({state}) =>
     switch (state.currentPage) {
-    | Room(_roomName) => <Room />
+    | Room(roomName) => <Room roomName />
     | Rooms => <Rooms />
     | Login => <Login />
     | Unknown => "Unknown page" |> Utils.ste

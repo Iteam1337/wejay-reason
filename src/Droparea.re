@@ -59,6 +59,15 @@ let droparea =
 
 module QueueTrackMutation = ReasonApollo.CreateMutation(QueueTrack);
 
+let parseSpotifyLinks = evt =>
+  ReactEventRe.Mouse.nativeEvent(evt)##dataTransfer##getData("text")
+  |> Js.String.replaceByRe(
+       [%re "/https:\\/\\/open.spotify.com\\/track\\//ig"],
+       "",
+     )
+  |> Js.String.splitByRe([%re "/\\n/"], _)
+  |> Js.Array.reverseInPlace;
+
 let make = _children => {
   ...component,
   initialState: () => {isDragging: false},
@@ -92,15 +101,9 @@ let make = _children => {
                      ReactEventRe.Synthetic.stopPropagation(evt);
                      ReactEventRe.Synthetic.preventDefault(evt);
 
-                     ReactEventRe.Mouse.nativeEvent(evt)##dataTransfer##getData(
-                       "text",
-                     )
-                     |> Js.String.replaceByRe(
-                          [%re "/https:\\/\\/open.spotify.com\\/track\\//ig"],
-                          "",
-                        )
-                     |> Js.String.splitByRe([%re "/\\n/"], _)
-                     |> Js.Array.reverseInPlace
+                     let spotifyTracks = parseSpotifyLinks(evt);
+
+                     spotifyTracks
                      |> Js.Array.forEach(spotifyId => {
                           let newTrack =
                             QueueTrack.makeWithVariables({

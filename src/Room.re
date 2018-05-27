@@ -2,8 +2,8 @@ let component = ReasonReact.statelessComponent("Room");
 
 module Room = [%graphql
   {|
-    query RoomQuery {
-      room(name: "iteam") {
+    query RoomQuery($roomName: String!) {
+      room(name: $roomName) {
         currentTrack {
           album {
             images {
@@ -60,14 +60,14 @@ module Room = [%graphql
 
 module RoomQuery = ReasonApollo.CreateQuery(Room);
 
-let make = _children => {
+let make = (~roomName, _children) => {
   ...component,
-  render: _self =>
-    <RoomQuery>
+  render: _self => {
+    let roomVariables = Room.make(~roomName, ());
+    <RoomQuery pollInterval=10000 variables=roomVariables##variables>
       ...(
            ({result}) =>
              switch (result) {
-             | NoData => "No Data" |> Utils.ste
              | Loading => "Loading" |> Utils.ste
              | Error(error) =>
                Js.log(error);
@@ -84,5 +84,6 @@ let make = _children => {
                |> ReasonReact.array
              }
          )
-    </RoomQuery>,
+    </RoomQuery>;
+  },
 };

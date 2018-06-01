@@ -17,7 +17,7 @@ let gridHead =
   style([
     alignItems(center),
     borderBottom(px(1), solid, hex("eaecef")),
-    color(rgba(54, 61, 67, 0.6)),
+    color(rgba(36, 41, 46, 0.6)),
     display(none),
     gridColumn(2, 2),
     gridColumnGap(px(20)),
@@ -27,8 +27,8 @@ let gridHead =
     media(
       "(min-width: 768px)",
       [
-    display(grid),
-    unsafe("gridTemplateColumns", "20px 40px repeat(3, 1fr) 50px 30px"),
+        display(grid),
+        unsafe("gridTemplateColumns", "20px 40px repeat(3, 1fr) 50px 30px"),
       ],
     ),
   ]);
@@ -37,7 +37,7 @@ let trackRow =
   style([
     alignItems(center),
     borderBottom(px(1), solid, hex("eaecef")),
-    color(hex("363d43")),
+    color(hex(Theme.colors.foreground)),
     display(grid),
     gridColumn(2, 2),
     gridColumnGap(px(20)),

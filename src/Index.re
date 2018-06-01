@@ -5,7 +5,7 @@ Css.(
     "body, html",
     [
       backgroundColor(hex("fff")),
-      color(hex("afafc7")),
+      color(hex(Theme.colors.foreground)),
       fontFamily("'Roboto', Helvetica, sans-serif"),
       margin(px(0)),
       padding(px(0)),

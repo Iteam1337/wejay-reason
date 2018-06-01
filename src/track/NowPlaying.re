@@ -32,7 +32,7 @@ let background =
 
 let backgroundOverlay =
   style([
-    backgroundColor(rgba(33, 33, 33, 0.4)),
+    backgroundColor(rgba(255, 255, 255, 0.75)),
     bottom(px(0)),
     left(px(0)),
     position(absolute),
@@ -58,7 +58,7 @@ let nowPlayingContent =
 
 let overlay =
   style([
-    backgroundColor(rgba(54, 116, 152, 0.4)),
+    backgroundColor(rgba(54, 116, 152, 0.2)),
     bottom(px(0)),
     left(px(0)),
     position(absolute),
@@ -70,14 +70,15 @@ let trackMeta = style([lineHeight(1.4)]);
 
 let nowPlayingArtist =
   style([
-    color(hex("fff")),
+    color(hex(Theme.colors.foreground)),
     fontSize(px(21)),
     fontWeight(300),
     textDecoration(none),
     selector(":hover", [textDecoration(underline)]),
   ]);
 
-let nowPlayingMeta = style([color(hex("fff")), fontSize(px(28))]);
+let nowPlayingMeta =
+  style([color(hex(Theme.colors.foreground)), fontSize(px(28))]);
 
 let make = (~track, _children) => {
   ...component,

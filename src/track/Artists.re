@@ -4,7 +4,7 @@ let component = ReasonReact.statelessComponent("Artists");
 
 let artistItem =
   style([
-    color(hex("363d43")),
+    color(hex(Theme.colors.foreground)),
     textDecoration(none),
     selector(":hover", [textDecoration(underline)]),
   ]);

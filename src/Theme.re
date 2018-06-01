@@ -1,4 +1,6 @@
-type colors = {wejay: string};
+type colors = {
+  foreground: string,
+  wejay: string,
+};
 
-let colors = {wejay: "eea54b"};
-
+let colors = {foreground: "24292e", wejay: "eea54b"};

@@ -9,24 +9,27 @@ let artistItem =
     selector(":hover", [textDecoration(underline)]),
   ]);
 
-let make = (~track, _children) => {
+let make = (~className=artistItem, ~track, _children) => {
   ...component,
   render: _self =>
-    <div>
+    <span>
       (
         Js.Array.mapi(
           (artist, i) =>
             [|
-              <a className=artistItem href=artist##uri>
+              <a className href=artist##uri key=artist##name>
                 (artist##name |> Utils.ste)
               </a>,
               i < Js.Array.length(track##artists) - 1 ?
-                <span> (", " |> Utils.ste) </span> : ReasonReact.null,
+                <span key=(artist##name ++ string_of_int(i))>
+                  (", " |> Utils.ste)
+                </span> :
+                ReasonReact.null,
             |]
             |> ReasonReact.array,
           track##artists,
         )
         |> ReasonReact.array
       )
-    </div>,
+    </span>,
 };

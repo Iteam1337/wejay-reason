@@ -11,11 +11,11 @@ let trackName =
 
 let trackMeta = style([lineHeight(1.4)]);
 
-let make = (~track, _children) => {
+let make = (~className=trackName, ~track, _children) => {
   ...component,
   render: _self =>
     <div className=trackMeta>
-      <div className=trackName> (track##name |> Utils.ste) </div>
+      <div className=className> (track##name |> Utils.ste) </div>
       <Artists track />
     </div>,
 };

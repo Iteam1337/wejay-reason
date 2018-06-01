@@ -19,6 +19,7 @@ module Room = [%graphql
           duration
           name
           spotifyUri
+          started
           user {
             email
           }

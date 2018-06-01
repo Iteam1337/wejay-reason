@@ -37,40 +37,19 @@ let make = _children => {
       schema=[(`email, Email)]>
       ...(
            ({form, handleChange, handleSubmit}) =>
-             <section className="hero has-background-light is-fullheight">
-               <div className="hero-body">
-                 <div className="container has-text-centered">
-                   <div className="column is-4 is-offset-4">
-                     <div className="box">
-                       <figure className=avatar>
-                         <img
-                           className=avatarImage
-                           src=(
-                             "https://www.gravatar.com/avatar/"
-                             ++ md5(form.values.email)
-                             ++ "?size=128"
-                           )
-                         />
-                       </figure>
-                       <form
-                         onSubmit=(
-                           ReForm.Helpers.handleDomFormSubmit(handleSubmit)
-                         )>
-                         <Input
-                           helpText="E-mail address is used to fetch Gravatar"
-                           label="E-mail address"
-                           onChange=(handleChange(`email))
-                           value=form.values.email
-                         />
-                         <button _type="submit" className="button is-primary">
-                           ("Save e-mail" |> Utils.ste)
-                         </button>
-                       </form>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </section>
+             <form
+               onSubmit=(ReForm.Helpers.handleDomFormSubmit(handleSubmit))>
+               <Input
+                 _type="email"
+                 helpText="E-mail address is used to fetch Gravatar"
+                 label="E-mail address"
+                 onChange=(handleChange(`email))
+                 value=form.values.email
+               />
+               <button _type="submit" className="button is-primary">
+                 ("Save e-mail" |> Utils.ste)
+               </button>
+             </form>
          )
     </LoginForm>,
 };

@@ -1,18 +1,19 @@
 open Css;
 
-let component = ReasonReact.statelessComponent("NowPlaying");
+type state = {barPosition: float};
+
+type action =
+  | UpdateBar;
+
+let component = ReasonReact.reducerComponent("NowPlaying");
 
 let nowPlaying =
   style([
-    backgroundColor(hex("fff")),
     display(grid),
     height(px(300)),
-    padding(px(20)),
-    position(sticky),
+    position(relative),
     overflow(hidden),
-    top(px(0)),
-    unsafe("gridTemplateColumns", "1fr 1140px 1fr"),
-    zIndex(2),
+    unsafe("gridTemplateColumns", "1fr 80vw 1fr"),
   ]);
 
 let background =
@@ -22,25 +23,87 @@ let background =
     bottom(px(0)),
     left(px(0)),
     transform(scale(1.5, 1.5)),
-    opacity(0.2),
     position(absolute),
     right(px(0)),
     top(px(0)),
-    unsafe("filter", "blur(10px)"),
+    unsafe("filter", "blur(20px)"),
+    zIndex(1),
+  ]);
+
+let backgroundOverlay =
+  style([
+    backgroundColor(rgba(33, 33, 33, 0.4)),
+    bottom(px(0)),
+    left(px(0)),
+    position(absolute),
+    right(px(0)),
+    top(px(0)),
+    zIndex(2),
   ]);
 
 let nowPlayingContent =
   style([
-    alignItems(center),
+    alignItems(flexEnd),
+    bottom(px(0)),
     display(grid),
-    gridColumnGap(px(20)),
     gridColumn(2, 2),
-    unsafe("gridTemplateColumns", "auto 1fr auto auto"),
+    gridColumnGap(px(20)),
+    left(px(0)),
+    paddingBottom(px(40)),
+    position(absolute),
+    right(px(0)),
+    unsafe("gridTemplateColumns", "auto 1fr"),
+    zIndex(4),
   ]);
+
+let overlay =
+  style([
+    backgroundColor(rgba(54, 116, 152, 0.4)),
+    bottom(px(0)),
+    left(px(0)),
+    position(absolute),
+    top(px(0)),
+    zIndex(3),
+  ]);
+
+let trackMeta = style([lineHeight(1.4)]);
+
+let nowPlayingArtist =
+  style([
+    color(hex("fff")),
+    fontSize(px(21)),
+    fontWeight(300),
+    textDecoration(none),
+    selector(":hover", [textDecoration(underline)]),
+  ]);
+
+let nowPlayingMeta = style([color(hex("fff")), fontSize(px(28))]);
 
 let make = (~track, _children) => {
   ...component,
-  render: _self =>
+  initialState: () => {barPosition: 0.0},
+  reducer: (action, _state) =>
+    switch (action) {
+    | UpdateBar =>
+      let barPosition =
+        switch (track) {
+        | None => 0.0
+        | Some(track) =>
+          switch (track##started) {
+          | None => 0.0
+          | Some(started) =>
+            (Js.Date.now() -. started) /. track##duration *. float_of_int(100)
+          }
+        };
+
+      ReasonReact.Update({barPosition: barPosition});
+    },
+  didMount: self => {
+    self.send(UpdateBar);
+    let intervalId = Js.Global.setInterval(() => self.send(UpdateBar), 1000);
+    self.onUnmount(() => Js.Global.clearInterval(intervalId));
+  },
+  render: ({state}) =>
     switch (track) {
     | None => ReasonReact.null
     | Some(track) =>
@@ -56,11 +119,25 @@ let make = (~track, _children) => {
             )
           )
         />
+        <div className=backgroundOverlay />
+        <div
+          className=overlay
+          style=(
+            ReactDOMRe.Style.make(
+              ~width=string_of_float(state.barPosition) ++ "%",
+              (),
+            )
+          )
+        />
         <div className=nowPlayingContent>
-          <Cover track />
-          <TrackMeta track />
-          <TrackDuration track />
-          <Gravatar track />
+          <Cover size="200px" track />
+          <div>
+            <Gravatar track />
+            <div className=trackMeta>
+              <div className=nowPlayingMeta> (track##name |> Utils.ste) </div>
+              <Artists className=nowPlayingArtist track />
+            </div>
+          </div>
         </div>
       </div>;
     },

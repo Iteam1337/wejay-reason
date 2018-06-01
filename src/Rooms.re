@@ -1,14 +1,17 @@
+open Css;
+
 let component = ReasonReact.statelessComponent("Rooms");
 
 module Rooms = [%graphql
   {|
-    query rooms {
+    query Rooms {
       rooms {
         name
         currentTrack {
           name
           artists {
             name
+            uri
           }
         }
         users {
@@ -19,18 +22,15 @@ module Rooms = [%graphql
 |}
 ];
 
-module JoinRoom = [%graphql
-  {|
-    mutation joinRoom($input: JoinRoomInput!) {
-      joinRoom(input: $input) {
-        name
-      }
-    }
-|}
-];
-
-module JoinRoomMutation = ReasonApollo.CreateMutation(JoinRoom);
 module RoomsQuery = ReasonApollo.CreateQuery(Rooms);
+
+let rooms =
+  style([
+    display(grid),
+    marginTop(px(60)),
+    unsafe("gridTemplateColumns", "1fr 300px 1fr"),
+    selector("> *", [gridColumn(2, 2)]),
+  ]);
 
 let make = _children => {
   ...component,
@@ -44,47 +44,16 @@ let make = _children => {
                Js.log(error);
                "Error" |> Utils.ste;
              | Data(response) =>
-               <JoinRoomMutation>
-                 ...(
-                      (mutation, _) => {
-                        let roomList =
-                          Js.Array.map(
-                            room =>
-                              <div
-                                key=room##name
-                                onClick=(
-                                  _evt => {
-                                    let newUser =
-                                      JoinRoom.makeWithVariables({
-                                        "input": {
-                                          "email": Utils.userEmail,
-                                          "roomName": room##name,
-                                        },
-                                      });
-
-                                    mutation(
-                                      ~variables=newUser##variables,
-                                      ~refetchQueries=[||],
-                                      (),
-                                    )
-                                    |> {
-                                      ReasonReact.Router.push(
-                                        "/room/" ++ room##name,
-                                      );
-                                      ignore;
-                                    };
-                                  }
-                                )>
-                                (room##name |> Utils.ste)
-                              </div>,
-                            response##rooms,
-                          )
-                          |> ReasonReact.array;
-
-                        <div> roomList </div>;
-                      }
-                    )
-               </JoinRoomMutation>
+               <div className=rooms>
+                 (
+                   response##rooms
+                   |> Js.Array.map(room =>
+                        <RoomListItem key=room##name room />
+                      )
+                   |> ReasonReact.array
+                 )
+                 <AddRoom />
+               </div>
              }
          )
     </RoomsQuery>,

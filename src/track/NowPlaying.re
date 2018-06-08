@@ -13,7 +13,7 @@ let nowPlaying =
     height(px(300)),
     position(relative),
     overflow(hidden),
-    unsafe("gridTemplateColumns", "1fr 80vw 1fr"),
+    gridTemplateColumns([fr(1.0), vw(80.0), fr(1.0)]),
   ]);
 
 let background =
@@ -48,11 +48,11 @@ let nowPlayingContent =
     display(grid),
     gridColumn(2, 2),
     gridColumnGap(px(20)),
+    gridTemplateColumns([auto, fr(1.0)]),
     left(px(0)),
     paddingBottom(px(40)),
     position(absolute),
     right(px(0)),
-    unsafe("gridTemplateColumns", "auto 1fr"),
     zIndex(4),
   ]);
 
@@ -79,6 +79,9 @@ let nowPlayingArtist =
 
 let nowPlayingMeta =
   style([color(hex(Theme.colors.foreground)), fontSize(px(28))]);
+
+let nowPlayingAlbum =
+  style([color(hex(Theme.colors.foreground)), fontSize(px(16))]);
 
 let make = (~track, _children) => {
   ...component,
@@ -137,6 +140,11 @@ let make = (~track, _children) => {
             <div className=trackMeta>
               <div className=nowPlayingMeta> (track##name |> Utils.ste) </div>
               <Artists className=nowPlayingArtist track />
+              <div>
+                <a className=nowPlayingAlbum href=track##album##uri>
+                  (track##album##name |> Utils.ste)
+                </a>
+              </div>
             </div>
           </div>
         </div>

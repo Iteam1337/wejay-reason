@@ -1,13 +1,13 @@
 let component = ReasonReact.statelessComponent("Input");
 
-let make = (~_type, ~helpText=?, ~label, ~onChange, ~value, _children) => {
+let make = (~type_="text", ~helpText=?, ~label, ~onChange, ~value, _children) => {
   ...component,
   render: _self =>
     <div className="field">
       <div className="control">
         <label className="label" htmlFor="email"> (label |> Utils.ste) </label>
         <input
-          _type
+          type_
           className="input is-medium"
           id="email"
           onChange=(ReForm.Helpers.handleDomFormChange(onChange))

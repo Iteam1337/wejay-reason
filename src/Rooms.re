@@ -27,8 +27,8 @@ module RoomsQuery = ReasonApollo.CreateQuery(Rooms);
 let rooms =
   style([
     display(grid),
+    gridTemplateColumns([fr(1.0), px(300), fr(1.0)]),
     marginTop(px(60)),
-    unsafe("gridTemplateColumns", "1fr 300px 1fr"),
     selector("> *", [gridColumn(2, 2)]),
   ]);
 

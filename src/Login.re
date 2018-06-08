@@ -40,7 +40,7 @@ let make = _children => {
              <form
                onSubmit=(ReForm.Helpers.handleDomFormSubmit(handleSubmit))>
                <Input
-                 _type="email"
+                 type_="email"
                  helpText="E-mail address is used to fetch Gravatar"
                  label="E-mail address"
                  onChange=(handleChange(`email))

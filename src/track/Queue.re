@@ -5,11 +5,10 @@ let component = ReasonReact.statelessComponent("Queue");
 let gridRow =
   style([
     display(grid),
-    /* Replace when this gets pushed to a new version https://github.com/SentiaAnalytics/bs-css/commit/2be0bfdaec448c7ce17a564cd5f7c4d269acf2c8 */
+    gridTemplateColumns([fr(1.0), vw(80.0), fr(1.0)]),
     paddingBottom(px(40)),
     paddingTop(px(40)),
     position(relative),
-    unsafe("gridTemplateColumns", "1fr 80vw 1fr"),
     zIndex(1),
   ]);
 
@@ -28,7 +27,15 @@ let gridHead =
       "(min-width: 768px)",
       [
         display(grid),
-        unsafe("gridTemplateColumns", "20px 40px repeat(3, 1fr) 50px 30px"),
+        gridTemplateColumns([
+          px(20),
+          px(40),
+          fr(1.0),
+          fr(1.0),
+          fr(1.0),
+          px(50),
+          px(30),
+        ]),
       ],
     ),
   ]);
@@ -44,9 +51,16 @@ let trackRow =
     fontSize(px(12)),
     paddingBottom(px(15)),
     paddingTop(px(15)),
-    /* Replace when this gets pushed to a new version https://github.com/SentiaAnalytics/bs-css/commit/2be0bfdaec448c7ce17a564cd5f7c4d269acf2c8 */
-    unsafe("gridTemplateColumns", "20px auto repeat(3, 1fr) 50px 30px"),
-    media("(max-width: 768px)", [unsafe("gridTemplateColumns", "1fr")]),
+    gridTemplateColumns([
+      px(20),
+      auto,
+      fr(1.0),
+      fr(1.0),
+      fr(1.0),
+      px(50),
+      px(30),
+    ]),
+    media("(max-width: 768px)", [gridTemplateColumns([fr(1.0)])]),
   ]);
 
 let trackNumberClass =
@@ -76,6 +90,8 @@ let emptyList =
     marginTop(px(20)),
     padding(px(40)),
   ]);
+
+let queueDuration = style([textAlign(`right)]);
 
 let trackNumber = number =>
   if (number < 10) {
@@ -116,7 +132,7 @@ let make = (~queue, _children) => {
                 <a className=trackName href=track##album##uri>
                   (track##album##name |> Utils.ste)
                 </a>
-                <TrackDuration track />
+                <div className=queueDuration> <TrackDuration track /> </div>
                 <Gravatar track />
               </div>,
             queue,

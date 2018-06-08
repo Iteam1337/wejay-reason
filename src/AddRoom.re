@@ -34,7 +34,7 @@ let make = _children => {
   render: _self =>
     <AddRoomMutation>
       ...(
-           (mutation, _) =>
+           (mutation, {result}) =>
              <AddRoomForm
                onSubmit=(
                  ({values}) => {
@@ -59,7 +59,6 @@ let make = _children => {
                             ReForm.Helpers.handleDomFormSubmit(handleSubmit)
                           )>
                           <Input
-                            _type="text"
                             label="Room name"
                             onChange=(handleChange(`roomName))
                             value=form.values.roomName
@@ -71,6 +70,13 @@ let make = _children => {
                               |> ReasonReact.string
                             )
                           </p>
+                          (
+                            switch (result) {
+                            | Error(err) =>
+                              <div> (err##message |> Utils.ste) </div>
+                            | _ => ReasonReact.null
+                            }
+                          )
                           <button _type="submit" className="button">
                             ("Add room" |> Utils.ste)
                           </button>

@@ -72,8 +72,7 @@ let make = _children => {
                           </p>
                           (
                             switch (result) {
-                            | Error(err) =>
-                              <div> (err##message |> Utils.ste) </div>
+                            | Error(error) => Utils.handleErrors(error)
                             | _ => ReasonReact.null
                             }
                           )

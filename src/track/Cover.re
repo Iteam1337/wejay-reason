@@ -16,7 +16,7 @@ let coverShadow =
   style([
     bottom(px(-25)),
     left(px(0)),
-    position(absolute),
+    position(`absolute),
     transform(scale(0.9, 0.9)),
     zIndex(1),
     unsafe("filter", "blur(15px)"),

@@ -45,7 +45,7 @@ module Styles = {
       backgroundColor(rgba(0, 0, 0, 0.85)),
       bottom(px(0)),
       color(hex("fff")),
-      display(grid),
+      display(`grid),
       gridTemplateColumns([fr(1.0), vw(60.0), fr(1.0)]),
       left(px(0)),
       position(fixed),
@@ -61,19 +61,15 @@ module Styles = {
       cursor(`pointer),
       fontSize(px(24)),
       right(px(40)),
-      position(absolute),
+      position(`absolute),
       top(px(40)),
     ]);
 
   let searchIcon =
     style([
-      color(rgba(36, 41, 46, 0.6)),
+      color(hex(Theme.colors.lightGray)),
       cursor(`pointer),
       fontSize(px(24)),
-      right(px(40)),
-      position(fixed),
-      top(px(40)),
-      zIndex(9),
     ]);
 };
 

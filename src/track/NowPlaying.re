@@ -1,106 +1,132 @@
-open Css;
+[@bs.val] [@bs.module "track-duration"] external parse : int => string = "";
 
-type state = {barPosition: float};
+type state = {
+  barPosition: float,
+  songPosition: float,
+};
 
 type action =
   | UpdateBar;
 
 let component = ReasonReact.reducerComponent("NowPlaying");
 
-let nowPlaying =
-  style([
-    display(grid),
-    height(px(300)),
-    position(relative),
-    overflow(hidden),
-    gridTemplateColumns([fr(1.0), vw(80.0), fr(1.0)]),
-  ]);
+module Styles = {
+  open Css;
 
-let background =
-  style([
-    backgroundPosition(pct(50.0), pct(50.0)),
-    backgroundSize(`cover),
-    bottom(px(0)),
-    left(px(0)),
-    transform(scale(1.5, 1.5)),
-    position(absolute),
-    right(px(0)),
-    top(px(0)),
-    unsafe("filter", "blur(20px)"),
-    zIndex(1),
-  ]);
+  let nowPlaying =
+    style([
+      display(`grid),
+      height(px(300)),
+      position(`relative),
+      overflow(`hidden),
+      gridTemplateColumns([fr(1.0), vw(80.0), fr(1.0)]),
+    ]);
 
-let backgroundOverlay =
-  style([
-    backgroundColor(rgba(255, 255, 255, 0.75)),
-    bottom(px(0)),
-    left(px(0)),
-    position(absolute),
-    right(px(0)),
-    top(px(0)),
-    zIndex(2),
-  ]);
+  let background =
+    style([
+      backgroundPosition(pct(50.0), pct(50.0)),
+      backgroundSize(`cover),
+      bottom(px(0)),
+      left(px(0)),
+      opacity(0.5),
+      position(`absolute),
+      transform(scale(1.5, 1.5)),
+      unsafe("filter", "blur(10px)"),
+      right(px(0)),
+      top(px(0)),
+      zIndex(1),
+    ]);
 
-let nowPlayingContent =
-  style([
-    alignItems(flexEnd),
-    bottom(px(0)),
-    display(grid),
-    gridColumn(2, 2),
-    gridColumnGap(px(20)),
-    gridTemplateColumns([auto, fr(1.0)]),
-    left(px(0)),
-    paddingBottom(px(40)),
-    position(absolute),
-    right(px(0)),
-    zIndex(4),
-  ]);
+  let backgroundOverlay =
+    style([
+      backgroundColor(rgba(255, 255, 255, 0.6)),
+      bottom(px(0)),
+      left(px(0)),
+      position(`absolute),
+      right(px(0)),
+      top(px(0)),
+      zIndex(2),
+    ]);
 
-let overlay =
-  style([
-    backgroundColor(rgba(54, 116, 152, 0.2)),
-    bottom(px(0)),
-    left(px(0)),
-    position(absolute),
-    top(px(0)),
-    zIndex(3),
-  ]);
+  let nowPlayingContent =
+    style([
+      alignItems(`center),
+      bottom(px(0)),
+      display(`grid),
+      gridColumn(2, 2),
+      gridColumnGap(px(40)),
+      gridTemplateColumns([auto, fr(1.0)]),
+      left(px(0)),
+      paddingBottom(px(40)),
+      position(`absolute),
+      right(px(0)),
+      zIndex(4),
+    ]);
 
-let trackMeta = style([lineHeight(1.4)]);
+  let overlay =
+    style([
+      backgroundColor(rgba(54, 116, 152, 0.2)),
+      bottom(px(0)),
+      left(px(0)),
+      position(`absolute),
+      top(px(0)),
+      zIndex(3),
+    ]);
 
-let nowPlayingArtist =
-  style([
-    color(hex(Theme.colors.foreground)),
-    fontSize(px(21)),
-    fontWeight(300),
-    textDecoration(none),
-    selector(":hover", [textDecoration(underline)]),
-  ]);
+  let trackMeta = style([lineHeight(1.4)]);
 
-let nowPlayingMeta =
-  style([color(hex(Theme.colors.foreground)), fontSize(px(28))]);
+  let nowPlayingMeta =
+    style([
+      color(hex(Theme.colors.foreground)),
+      fontSize(em(2.0)),
+      fontWeight(400),
+      lineHeight(1.2),
+    ]);
 
-let nowPlayingAlbum =
-  style([color(hex(Theme.colors.foreground)), fontSize(px(16))]);
+  let nowPlayingArtist =
+    style([
+      color(hex(Theme.colors.foreground)),
+      fontSize(em(1.7411)),
+      fontWeight(300),
+      lineHeight(1.3),
+      textDecoration(`none),
+      selector(":hover", [textDecoration(`underline)]),
+    ]);
+
+  let nowPlayingAlbum =
+    style([
+      alignItems(`center),
+      color(hex(Theme.colors.foreground)),
+      display(`flex),
+      fontSize(em(0.8706)),
+    ]);
+
+  let gravatarWrap = style([marginLeft(px(5))]);
+};
 
 let make = (~track, _children) => {
   ...component,
-  initialState: () => {barPosition: 0.0},
+  initialState: () => {barPosition: 0.0, songPosition: 0.0},
   reducer: (action, _state) =>
     switch (action) {
     | UpdateBar =>
-      let barPosition =
+      let (barPosition, songPosition) =
         switch (track) {
-        | None => 0.0
+        | None => (0.0, 0.0)
         | Some(track) =>
           switch (track##started) {
-          | None => 0.0
+          | None => (0.0, 0.0)
           | Some(started) =>
-            (Js.Date.now() -. started) /. track##duration *. float_of_int(100)
+            let currentTime = Js.Date.now() -. started;
+
+            (
+              currentTime /. track##duration *. float_of_int(100),
+              currentTime > track##duration ? track##duration : currentTime,
+            );
           }
         };
 
-      ReasonReact.Update({barPosition: barPosition});
+      ReasonReact.Update({barPosition, songPosition});
     },
   didMount: self => {
     self.send(UpdateBar);
@@ -113,9 +139,9 @@ let make = (~track, _children) => {
     | Some(track) =>
       let firstCover =
         track##album##images |> Array.to_list |> List.nth(_, 0);
-      <div className=nowPlaying>
+      <div className=Styles.nowPlaying>
         <div
-          className=background
+          className=Styles.background
           style=(
             ReactDOMRe.Style.make(
               ~backgroundImage="url(" ++ firstCover##url ++ ")",
@@ -123,9 +149,9 @@ let make = (~track, _children) => {
             )
           )
         />
-        <div className=backgroundOverlay />
+        <div className=Styles.backgroundOverlay />
         <div
-          className=overlay
+          className=Styles.overlay
           style=(
             ReactDOMRe.Style.make(
               ~width=string_of_float(state.barPosition) ++ "%",
@@ -133,15 +159,27 @@ let make = (~track, _children) => {
             )
           )
         />
-        <div className=nowPlayingContent>
+        <div className=Styles.nowPlayingContent>
           <Cover size="200px" track />
           <div>
-            <Gravatar track />
-            <div className=trackMeta>
-              <div className=nowPlayingMeta> (track##name |> Utils.ste) </div>
-              <Artists className=nowPlayingArtist track />
-              <div className=nowPlayingAlbum>
-                (track##album##name |> Utils.ste)
+            <div className=Styles.trackMeta>
+              <div className=Styles.nowPlayingMeta>
+                (track##name |> Utils.ste)
+              </div>
+              <Artists className=Styles.nowPlayingArtist track />
+              <div className=Styles.nowPlayingAlbum>
+                (
+                  track##album##name
+                  ++ {js| • |js}
+                  ++ parse(int_of_float(state.songPosition))
+                  ++ " / "
+                  ++ parse(int_of_float(track##duration))
+                  ++ {js| • |js}
+                  |> Utils.ste
+                )
+                <span className=Styles.gravatarWrap>
+                  <Gravatar size="20px" track />
+                </span>
               </div>
             </div>
           </div>

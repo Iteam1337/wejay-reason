@@ -1944,5 +1944,16 @@
         }
       ]
     }
+  },
+  "extensions": {
+    "tracing": {
+      "version": 1,
+      "startTime": "2018-06-08T19:16:17.635Z",
+      "endTime": "2018-06-08T19:16:17.646Z",
+      "duration": 11281328,
+      "execution": {
+        "resolvers": []
+      }
+    }
   }
 }

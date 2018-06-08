@@ -15,7 +15,7 @@ module Styles = {
     style([
       alignItems(center),
       cursor(`pointer),
-      display(grid),
+      display(`grid),
       gridColumnGap(px(20)),
       gridTemplateColumns([px(40), fr(1.0)]),
       opacity(0.6),
@@ -67,25 +67,24 @@ let make = (~close, ~tracks, _children) => {
                         <div className=Styles.trackMeta>
                           <div> (track##name |> Utils.ste) </div>
                           (
-                            Js.Array.mapi(
-                              (artist, i) =>
-                                [|
-                                  <span
-                                    className=Styles.trackArtist
-                                    href=artist##uri
-                                    key=artist##name>
-                                    (artist##name |> Utils.ste)
-                                  </span>,
-                                  i < Js.Array.length(track##artists) - 1 ?
-                                    <span
-                                      key=(artist##name ++ string_of_int(i))>
-                                      (", " |> Utils.ste)
-                                    </span> :
-                                    ReasonReact.null,
-                                |]
-                                |> ReasonReact.array,
-                              track##artists,
-                            )
+                            track##artists
+                            |> Js.Array.mapi((artist, i) =>
+                                 [|
+                                   <span
+                                     className=Styles.trackArtist
+                                     href=artist##uri
+                                     key=artist##name>
+                                     (artist##name |> Utils.ste)
+                                   </span>,
+                                   i < Js.Array.length(track##artists) - 1 ?
+                                     <span
+                                       key=(artist##name ++ string_of_int(i))>
+                                       (", " |> Utils.ste)
+                                     </span> :
+                                     ReasonReact.null,
+                                 |]
+                                 |> ReasonReact.array
+                               )
                             |> ReasonReact.array
                           )
                         </div>

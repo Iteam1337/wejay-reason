@@ -6,6 +6,7 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "schema": "npx send-introspection-query http://localhost:4000",
     "webpack": "webpack-serve -w",
     "webpack:production": "NODE_ENV=production webpack"
   },

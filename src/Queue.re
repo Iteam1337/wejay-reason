@@ -45,7 +45,7 @@ module Styles = {
       alignItems(center),
       borderBottom(px(1), solid, hex("eaecef")),
       color(hex(Theme.colors.foreground)),
-      display(grid),
+      display(`grid),
       gridColumn(2, 2),
       gridColumnGap(px(20)),
       fontSize(px(12)),

@@ -15,3 +15,17 @@ let userEmail =
   | None => ""
   | Some(email) => email
   };
+
+let handleErrors = error => {
+  let gqlErrors = Js.Nullable.toOption(error##graphQLErrors);
+  let networkError = Js.Nullable.toOption(error##networkError);
+
+  switch (gqlErrors, networkError) {
+  | (None, None) => ReasonReact.null
+  | (Some(errors), _) =>
+    errors
+    |> Js.Array.map(error => <div> (error |> ste) </div>)
+    |> ReasonReact.array
+  | (None, Some(errors)) => <div> (errors |> ste) </div>
+  };
+};

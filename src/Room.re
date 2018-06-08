@@ -54,29 +54,47 @@ module Room = [%graphql
 
 module RoomQuery = ReasonApollo.CreateQuery(Room);
 
+module Styles = {
+  open Css;
+
+  let room =
+    style([
+      display(`grid),
+      gridTemplateColumns([px(50), fr(1.0)]),
+      height(vh(100.0)),
+    ]);
+
+  let roomContent = style([height(vh(100.0)), overflow(`auto)]);
+};
+
 let make = (~roomName, _children) => {
   ...component,
   render: _self => {
     let roomVariables = Room.make(~roomName, ());
+
     <RoomQuery pollInterval=10000 variables=roomVariables##variables>
       ...(
            ({result}) =>
              switch (result) {
              | Loading => "Loading" |> Utils.ste
-             | Error(error) =>
-               Js.log(error);
-               "Error" |> Utils.ste;
+             | Error(error) => Utils.handleErrors(error)
              | Data(response) =>
-               [|
-                 <NowPlaying
-                   key="nowPlaying"
-                   track=response##room##currentTrack
-                 />,
-                 <Search key="search" />,
-                 <Queue key="queue" queue=response##room##queue />,
-                 <Droparea key="droparea" />,
-               |]
-               |> ReasonReact.array
+               <div className=Styles.room>
+                 <Menu />
+                 <div className=Styles.roomContent>
+                   (
+                     [|
+                       <NowPlaying
+                         key="nowPlaying"
+                         track=response##room##currentTrack
+                       />,
+                       <Queue key="queue" queue=response##room##queue />,
+                       <Droparea key="droparea" />,
+                     |]
+                     |> ReasonReact.array
+                   )
+                 </div>
+               </div>
              }
          )
     </RoomQuery>;

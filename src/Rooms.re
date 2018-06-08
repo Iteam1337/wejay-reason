@@ -26,7 +26,7 @@ module RoomsQuery = ReasonApollo.CreateQuery(Rooms);
 
 let rooms =
   style([
-    display(grid),
+    display(`grid),
     gridTemplateColumns([fr(1.0), px(300), fr(1.0)]),
     marginTop(px(60)),
     selector("> *", [gridColumn(2, 2)]),
@@ -40,9 +40,7 @@ let make = _children => {
            ({result}) =>
              switch (result) {
              | Loading => "Loading" |> Utils.ste
-             | Error(error) =>
-               Js.log(error);
-               "Error" |> Utils.ste;
+             | Error(error) => Utils.handleErrors(error)
              | Data(response) =>
                <div className=rooms>
                  (

@@ -3,6 +3,9 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 const history = require('connect-history-api-fallback')
 const convert = require('koa-connect')
 const isProd = process.env.NODE_ENV === 'production'
+const webpack = require('webpack')
+
+require('dotenv').config()
 
 module.exports = {
   entry: './lib/js/src/Index.bs.js',
@@ -17,6 +20,9 @@ module.exports = {
     new HtmlWebPackPlugin({
       inject: true,
       template: './src/index.html'
+    }),
+    new webpack.DefinePlugin({
+      REACT_APP_GRAPHQL_URL: JSON.stringify(process.env.REACT_APP_GRAPHQL_URL)
     })
   ],
 

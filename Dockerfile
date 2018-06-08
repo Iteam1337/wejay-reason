@@ -14,9 +14,6 @@ COPY graphql_schema.json ./graphql_schema.json
 COPY webpack.config.js ./webpack.config.js
 RUN npm install
 
-RUN npm run build
-RUN npm run webpack:production
-
 EXPOSE 3000
 
-CMD serve -s build
+CMD ["sh", "-c", "npm run build && npm run webpack:production && serve -s build"]

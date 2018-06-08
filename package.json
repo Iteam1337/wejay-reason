@@ -25,6 +25,7 @@
     "bs-css": "7.0.1",
     "bs-reform": "5.1.1",
     "bs-webapi": "0.9.1",
+    "dotenv": "6.0.0",
     "fpack": "0.4.1",
     "graphql": "14.0.0-rc.1",
     "graphql-tag": "2.9.2",

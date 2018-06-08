@@ -36,6 +36,7 @@ let make = _children => {
       ...(
            (mutation, {result}) =>
              <AddRoomForm
+               initialState={roomName: ""}
                onSubmit=(
                  ({values}) => {
                    let newRoom = AddRoom.make(~roomName=values.roomName, ());
@@ -48,7 +49,6 @@ let make = _children => {
                    |> ignore;
                  }
                )
-               initialState={roomName: ""}
                schema=[(`roomName, Required)]>
                ...(
                     ({form, handleChange, handleSubmit, getErrorForField}) =>

@@ -72,6 +72,7 @@ let make = (~roomName, _children) => {
                    key="nowPlaying"
                    track=response##room##currentTrack
                  />,
+                 <Search key="search" />,
                  <Queue key="queue" queue=response##room##queue />,
                  <Droparea key="droparea" />,
                |]

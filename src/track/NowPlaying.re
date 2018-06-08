@@ -140,10 +140,8 @@ let make = (~track, _children) => {
             <div className=trackMeta>
               <div className=nowPlayingMeta> (track##name |> Utils.ste) </div>
               <Artists className=nowPlayingArtist track />
-              <div>
-                <a className=nowPlayingAlbum href=track##album##uri>
-                  (track##album##name |> Utils.ste)
-                </a>
+              <div className=nowPlayingAlbum>
+                (track##album##name |> Utils.ste)
               </div>
             </div>
           </div>

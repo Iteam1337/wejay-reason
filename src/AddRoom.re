@@ -59,6 +59,7 @@ let make = _children => {
                             ReForm.Helpers.handleDomFormSubmit(handleSubmit)
                           )>
                           <Input
+                            id="roomName"
                             label="Room name"
                             onChange=(handleChange(`roomName))
                             value=form.values.roomName
@@ -76,9 +77,9 @@ let make = _children => {
                             | _ => ReasonReact.null
                             }
                           )
-                          <button _type="submit" className="button">
-                            ("Add room" |> Utils.ste)
-                          </button>
+                          <Button type_="submit">
+                            ...("Add room" |> Utils.ste)
+                          </Button>
                         </form>
                       </div>
                   )

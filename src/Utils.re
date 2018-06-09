@@ -16,6 +16,10 @@ let userEmail =
   | Some(email) => email
   };
 
+/*
+   TODO: Fix gqlError when reason-apollo fixes
+   the error type, should be error##message
+ */
 let handleErrors = error => {
   let gqlErrors = Js.Nullable.toOption(error##graphQLErrors);
   let networkError = Js.Nullable.toOption(error##networkError);
@@ -24,7 +28,7 @@ let handleErrors = error => {
   | (None, None) => ReasonReact.null
   | (Some(errors), _) =>
     errors
-    |> Js.Array.map(error => <div> (error |> ste) </div>)
+    |> Js.Array.map(error => <div key=error> (error |> ste) </div>)
     |> ReasonReact.array
   | (None, Some(errors)) => <div> (errors |> ste) </div>
   };

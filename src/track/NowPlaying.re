@@ -80,7 +80,7 @@ module Styles = {
       color(hex(Theme.colors.foreground)),
       fontSize(em(2.0)),
       fontWeight(400),
-      lineHeight(1.2),
+      lineHeight(1.1),
     ]);
 
   let nowPlayingArtist =
@@ -88,7 +88,7 @@ module Styles = {
       color(hex(Theme.colors.foreground)),
       fontSize(em(1.7411)),
       fontWeight(300),
-      lineHeight(1.3),
+      lineHeight(1.75),
       textDecoration(`none),
       selector(":hover", [textDecoration(`underline)]),
     ]);

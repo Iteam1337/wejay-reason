@@ -16,7 +16,7 @@ module JoinRoomMutation = ReasonApollo.CreateMutation(JoinRoom);
 
 let roomListItem =
   style([
-    border(px(1), solid, hex("efefef")),
+    border(px(1), solid, hex(Theme.colors.border)),
     borderRadius(px(4)),
     color(hex("333")),
     cursor(`pointer),

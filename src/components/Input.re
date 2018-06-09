@@ -13,6 +13,8 @@ module Styles = {
       padding(px(10)),
       width(pct(100.0)),
     ]);
+
+  let helpText = style([fontSize(px(12))]);
 };
 
 let make =
@@ -32,8 +34,7 @@ let make =
       </div>
       (
         switch (helpText) {
-        | Some(text) =>
-          <p className="help has-text-left"> (text |> Utils.ste) </p>
+        | Some(text) => <p className=Styles.helpText> (text |> Utils.ste) </p>
         | None => ReasonReact.null
         }
       )

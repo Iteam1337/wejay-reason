@@ -6,7 +6,7 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "watch:jest": "jest --coverage --watchAll",
-    "schema": "npx send-introspection-query http://localhost:8080/query",
+    "schema": "npx send-introspection-query https://uohc0ora08.execute-api.eu-west-1.amazonaws.com/dev/graphql",
     "webpack": "webpack-serve -w",
     "webpack:production": "NODE_ENV=production webpack"
   },

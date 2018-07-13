@@ -5,7 +5,7 @@ let component = ReasonReact.statelessComponent("RoomListItem");
 module JoinRoom = [%graphql
   {|
     mutation joinRoom($input: JoinRoomInput!) {
-      joinRoom(input: $input) {
+      roomJoin(input: $input) {
         name
       }
     }

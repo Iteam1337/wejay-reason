@@ -29,7 +29,7 @@ module Styles = {
   let trackMeta = style([fontSize(px(14)), fontWeight(600)]);
 };
 
-let make = (~close, ~tracks, _children) => {
+let make = (~close, ~tracks, ~roomName, _children) => {
   ...component,
   render: _self =>
     <Droparea.QueueTrackMutation>
@@ -39,56 +39,62 @@ let make = (~close, ~tracks, _children) => {
                (
                  tracks
                  |> Js.Array.map(track =>
-                      <div
-                        className=Styles.searchTrack
-                        key=track##spotifyUri
-                        onClick=(
-                          _evt => {
-                            let newTrack =
-                              Droparea.QueueTrack.makeWithVariables({
-                                "input": {
-                                  "userId": Utils.userId,
-                                  "spotifyId": track##spotifyUri,
-                                  "roomName": "iteam",
-                                },
-                              });
+                      switch (track) {
+                      | None => ReasonReact.null
+                      | Some(track) =>
+                        <div
+                          className=Styles.searchTrack
+                          key=track##spotifyUri
+                          onClick=(
+                            _evt => {
+                              let newTrack =
+                                Droparea.QueueTrack.makeWithVariables({
+                                  "input": {
+                                    "userId": Utils.userId,
+                                    "spotifyId": [|track##spotifyUri|],
+                                    "roomName": roomName,
+                                  },
+                                });
 
-                            mutation(
-                              ~variables=newTrack##variables,
-                              ~refetchQueries=[|"RoomQuery"|],
-                              (),
-                            )
-                            |> ignore;
+                              mutation(
+                                ~variables=newTrack##variables,
+                                ~refetchQueries=[|"RoomQuery"|],
+                                (),
+                              )
+                              |> ignore;
 
-                            close();
-                          }
-                        )>
-                        <Cover track />
-                        <div className=Styles.trackMeta>
-                          <div> (track##name |> Utils.ste) </div>
-                          (
-                            track##artists
-                            |> Js.Array.mapi((artist, i) =>
-                                 [|
-                                   <span
-                                     className=Styles.trackArtist
-                                     href=artist##uri
-                                     key=artist##name>
-                                     (artist##name |> Utils.ste)
-                                   </span>,
-                                   i < Js.Array.length(track##artists) - 1 ?
+                              close();
+                            }
+                          )>
+                          <Cover track />
+                          <div className=Styles.trackMeta>
+                            <div> (track##name |> Utils.ste) </div>
+                            (
+                              track##artists
+                              |> Js.Array.mapi((artist, i) =>
+                                   [|
                                      <span
-                                       key=(artist##name ++ string_of_int(i))>
-                                       (", " |> Utils.ste)
-                                     </span> :
-                                     ReasonReact.null,
-                                 |]
-                                 |> ReasonReact.array
-                               )
-                            |> ReasonReact.array
-                          )
+                                       className=Styles.trackArtist
+                                       href=artist##uri
+                                       key=artist##name>
+                                       (artist##name |> Utils.ste)
+                                     </span>,
+                                     i < Js.Array.length(track##artists) - 1 ?
+                                       <span
+                                         key=(
+                                           artist##name ++ string_of_int(i)
+                                         )>
+                                         (", " |> Utils.ste)
+                                       </span> :
+                                       ReasonReact.null,
+                                   |]
+                                   |> ReasonReact.array
+                                 )
+                              |> ReasonReact.array
+                            )
+                          </div>
                         </div>
-                      </div>
+                      }
                     )
                  |> ReasonReact.array
                )

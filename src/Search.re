@@ -10,20 +10,22 @@ module SearchFields = [%graphql
   {|
   mutation Search($query: String!) {
     search(query: $query) {
-      album {
-        images {
-          url
+      tracks {
+        album {
+          images {
+            url
+          }
+          name
+          uri
         }
+        artists {
+          name
+          uri
+        }
+        duration
         name
-        uri
+        spotifyUri
       }
-      artists {
-        name
-        uri
-      }
-      duration
-      name
-      spotifyUri
     }
   }
 
@@ -76,7 +78,7 @@ module Styles = {
 module SearchMutation = ReasonApollo.CreateMutation(SearchFields);
 module SearchForm = ReForm.Create(SearchFormParams);
 
-let make = _children => {
+let make = (~roomName, _children) => {
   ...component,
   initialState: () => {searchOpen: false},
   reducer: (action, _state) =>
@@ -122,7 +124,8 @@ let make = _children => {
                               | Data(result) =>
                                 <SearchResults
                                   close=(() => send(HideSearch))
-                                  tracks=result##search
+                                  roomName
+                                  tracks=result##search##tracks
                                 />
                               | _ => ReasonReact.null
                               }

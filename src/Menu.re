@@ -20,11 +20,11 @@ module Styles = {
     ]);
 };
 
-let make = _children => {
+let make = (~roomName, _children) => {
   ...component,
   render: _self =>
     <div className=Styles.menu>
       <div className=Styles.logo />
-      <Search />
+      <Search roomName />
     </div>,
 };

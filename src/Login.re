@@ -14,12 +14,13 @@ module LoginForm = ReForm.Create(LoginParams);
 module Styles = {
   open Css;
 
-  let form = style([
-    marginLeft(`auto),
-    marginRight(`auto),
-    marginTop(px(60)),
-    width(px(400))
-  ]);
+  let form =
+    style([
+      marginLeft(`auto),
+      marginRight(`auto),
+      marginTop(px(60)),
+      width(px(400)),
+    ]);
 
   let avatar = style([marginTop(px(-70)), paddingBottom(px(20))]);
 
@@ -58,12 +59,12 @@ let make = _children => {
                  value=form.values.email
                />
                <p>
-               (
-                 getErrorForField(`email)
-                 |> Belt.Option.getWithDefault(_, "")
-                 |> ReasonReact.string
-               )
-             </p>
+                 (
+                   getErrorForField(`email)
+                   |> Belt.Option.getWithDefault(_, "")
+                   |> ReasonReact.string
+                 )
+               </p>
                <Button type_="submit">
                  ...("Save e-mail" |> Utils.ste)
                </Button>

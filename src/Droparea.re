@@ -12,22 +12,9 @@ let component = ReasonReact.reducerComponent("Droparea");
 module QueueTrack = [%graphql
   {|
   mutation QueueTrack($input: QueueInput!) {
-    queueTrack(input: $input) {
-      album {
-        images {
-          url
-        }
-        name
-      }
-      artists {
-        name
-      }
-      duration
-      name
-      spotifyUri
-      user {
-        email
-        id
+    roomQueueTrack(input: $input) {
+      currentTrack {
+        spotifyUri
       }
     }
   }
@@ -68,7 +55,7 @@ let parseSpotifyLinks = evt =>
   |> Js.String.splitByRe([%re "/\\n/"], _)
   |> Js.Array.reverseInPlace;
 
-let make = _children => {
+let make = (~roomName, _children) => {
   ...component,
   initialState: () => {isDragging: false},
   reducer: (action, _state) =>
@@ -103,24 +90,21 @@ let make = _children => {
 
                      let spotifyTracks = parseSpotifyLinks(evt);
 
-                     spotifyTracks
-                     |> Js.Array.forEach(spotifyId => {
-                          let newTrack =
-                            QueueTrack.makeWithVariables({
-                              "input": {
-                                "userId": Utils.userId,
-                                "spotifyId": spotifyId,
-                                "roomName": "iteam",
-                              },
-                            });
+                     let newTrack =
+                       QueueTrack.makeWithVariables({
+                         "input": {
+                           "userId": Utils.userId,
+                           "spotifyId": spotifyTracks,
+                           "roomName": roomName,
+                         },
+                       });
 
-                          mutation(
-                            ~variables=newTrack##variables,
-                            ~refetchQueries=[|"RoomQuery"|],
-                            (),
-                          )
-                          |> ignore;
-                        });
+                     mutation(
+                       ~variables=newTrack##variables,
+                       ~refetchQueries=[|"RoomQuery"|],
+                       (),
+                     )
+                     |> ignore;
 
                      send(DragLeave);
                    }

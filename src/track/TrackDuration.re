@@ -1,7 +1,5 @@
 open Css;
 
-[@bs.val] [@bs.module "track-duration"] external parse : int => string = "";
-
 let component = ReasonReact.statelessComponent("TrackDuration");
 
 let trackDuration =
@@ -11,6 +9,6 @@ let make = (~track, _children) => {
   ...component,
   render: _self =>
     <div className=trackDuration>
-      (parse(int_of_float(track##duration)) |> Utils.ste)
+      (track##duration |> float_of_int |> Duration.parse |> Utils.ste)
     </div>,
 };

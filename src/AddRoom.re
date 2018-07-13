@@ -4,8 +4,8 @@ let component = ReasonReact.statelessComponent("AddRoom");
 
 module AddRoom = [%graphql
   {|
-    mutation AddRoom($roomName: String!) {
-      addRoom(roomName: $roomName) {
+    mutation AddRoom($name: String!) {
+      roomCreate(name: $name) {
         name
       }
     }
@@ -39,7 +39,7 @@ let make = _children => {
                initialState={roomName: ""}
                onSubmit=(
                  ({values}) => {
-                   let newRoom = AddRoom.make(~roomName=values.roomName, ());
+                   let newRoom = AddRoom.make(~name=values.roomName, ());
 
                    mutation(
                      ~variables=newRoom##variables,

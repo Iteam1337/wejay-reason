@@ -80,7 +80,7 @@ let make = (~roomName, _children) => {
              | Error(error) => Utils.handleErrors(error)
              | Data(response) =>
                <div className=Styles.room>
-                 <Menu />
+                 <Menu roomName />
                  <div className=Styles.roomContent>
                    (
                      [|
@@ -89,7 +89,7 @@ let make = (~roomName, _children) => {
                          track=response##room##currentTrack
                        />,
                        <Queue key="queue" queue=response##room##queue />,
-                       <Droparea key="droparea" />,
+                       <Droparea key="droparea" roomName />,
                      |]
                      |> ReasonReact.array
                    )

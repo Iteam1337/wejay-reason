@@ -1,5 +1,3 @@
-[@bs.val] [@bs.module "track-duration"] external parse : int => string = "";
-
 type state = {
   barPosition: float,
   songPosition: float,
@@ -114,16 +112,14 @@ let make = (~track, _children) => {
         switch (track) {
         | None => (0.0, 0.0)
         | Some(track) =>
-          switch (track##started) {
-          | None => (0.0, 0.0)
-          | Some(started) =>
-            let currentTime = Js.Date.now() -. started;
+          let currentTime =
+            Js.Date.now() -. float_of_int(track##started) *. 1000.0;
+          let durationAsFloat = float_of_int(track##duration);
 
-            (
-              currentTime /. track##duration *. float_of_int(100),
-              currentTime > track##duration ? track##duration : currentTime,
-            );
-          }
+          (
+            currentTime /. durationAsFloat *. float_of_int(100),
+            currentTime > durationAsFloat ? durationAsFloat : currentTime,
+          );
         };
 
       ReasonReact.Update({barPosition, songPosition});
@@ -139,6 +135,7 @@ let make = (~track, _children) => {
     | Some(track) =>
       let firstCover =
         track##album##images |> Array.to_list |> List.nth(_, 0);
+
       <div className=Styles.nowPlaying>
         <div
           className=Styles.background
@@ -171,9 +168,9 @@ let make = (~track, _children) => {
                 (
                   track##album##name
                   ++ {js| • |js}
-                  ++ parse(int_of_float(state.songPosition))
+                  ++ (state.songPosition |> Duration.parse)
                   ++ " / "
-                  ++ parse(int_of_float(track##duration))
+                  ++ (track##duration |> float_of_int |> Duration.parse)
                   ++ {js| • |js}
                   |> Utils.ste
                 )

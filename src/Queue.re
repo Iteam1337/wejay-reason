@@ -121,27 +121,26 @@ let make = (~queue, _children) => {
             ("Queue is empty" |> Utils.ste)
           </div>
         | true =>
-          Js.Array.mapi(
-            (track, i) =>
-              <div className=Styles.trackRow key=track##spotifyUri>
-                <div className=Styles.trackNumberClass>
-                  (trackNumber(i + 1) |> Utils.ste)
-                </div>
-                <Cover track />
-                <a className=Styles.trackName href=track##spotifyUri>
-                  (track##name |> Utils.ste)
-                </a>
-                <Artists track />
-                <a className=Styles.trackName href=track##album##uri>
-                  (track##album##name |> Utils.ste)
-                </a>
-                <div className=Styles.queueDuration>
-                  <TrackDuration track />
-                </div>
-                <Gravatar track />
-              </div>,
-            queue,
-          )
+          queue
+          |> Js.Array.mapi((track, i) =>
+               <div className=Styles.trackRow key=track##spotifyUri>
+                 <div className=Styles.trackNumberClass>
+                   (trackNumber(i + 1) |> Utils.ste)
+                 </div>
+                 <Cover track />
+                 <a className=Styles.trackName href=track##spotifyUri>
+                   (track##name |> Utils.ste)
+                 </a>
+                 <Artists track />
+                 <a className=Styles.trackName href=track##album##uri>
+                   (track##album##name |> Utils.ste)
+                 </a>
+                 <div className=Styles.queueDuration>
+                   <TrackDuration track />
+                 </div>
+                 <Gravatar track />
+               </div>
+             )
           |> ReasonReact.array
         }
       )
